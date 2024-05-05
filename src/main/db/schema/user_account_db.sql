@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `user_account_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `user_account_db`;
--- MySQL dump 10.13  Distrib 8.0.27, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
--- Host: localhost    Database: user_account
+-- Host: localhost    Database: user_account_db
 -- ------------------------------------------------------
--- Server version	8.0.27
+-- Server version	8.0.34
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -154,8 +154,8 @@ CREATE TABLE `user_account` (
   `mobile_nbr_verification_otp_code` varchar(20) DEFAULT NULL,
   `email_verification_otp_code_generated_dt` datetime DEFAULT NULL,
   `mobile_nbr_verification_otp_code_generated_dt` datetime DEFAULT NULL,
-  `email_verification_status` bit DEFAULT NULL,
-  `mobile_nbr_verification_status` bit DEFAULT NULL,
+  `email_verification_status` bit(1) DEFAULT NULL,
+  `mobile_nbr_verification_status` bit(1) DEFAULT NULL,
   `registered_dt` date DEFAULT NULL,
   `activated_dt` date NOT NULL,
   `status` varchar(1) DEFAULT NULL,
@@ -221,4 +221,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-03 19:35:02
+-- Dump completed on 2024-05-04 13:34:28

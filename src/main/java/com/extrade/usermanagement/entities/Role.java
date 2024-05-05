@@ -6,19 +6,21 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "roles")
 @Data
+@Table(name="roles")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id")
+    @Column(name="role_id")
     private int roleId;
-    @Column(name = "role_cd")
+    @Column(name="role_cd")
     private String roleCode;
+
     private String description;
-    @Column(name = "last_modified_dt")
+
+    @Column(name="last_modified_dt")
     private LocalDateTime lastModifiedDate;
-    @Column(name = "last_modified_by")
-    private String lastModifiedBy;
+    @Column(name="last_modified_by")
+    private LocalDateTime lastModifiedBy;
 
 }
