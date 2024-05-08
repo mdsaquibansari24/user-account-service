@@ -1,6 +1,8 @@
 package com.extrade.usermanagement.service;
 
 
+import com.extrade.connect.beans.notification.MailNotification;
+import com.extrade.connect.manager.NotificationManager;
 import com.extrade.usermanagement.dto.UserAccountDto;
 import com.extrade.usermanagement.entities.Role;
 import com.extrade.usermanagement.entities.UserAccount;
@@ -12,18 +14,36 @@ import com.extrade.usermanagement.utilities.UserAccountConstants;
 import com.extrade.usermanagement.utilities.UserAccountStatusEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
+
 @Slf4j
 public class UserManagementServiceImpl implements UserManagmentService {
+    private final String TEMP_VERIFY_EMAIL="emai-verification.html";
+
+
+
     private final UserAccountRepository userAccountRepository;
     private final RoleRepository roleRepository;
+    private final String xtradeCustomerWebLink;
+    private final NotificationManager notificationManager;
+    public UserManagementServiceImpl(UserAccountRepository userAccountRepository, RoleRepository roleRepository, @Value("${eXtrade.customer.weblink}") String xtradeCustomerWebLink, NotificationManager notificationManager) {
+        this.userAccountRepository = userAccountRepository;
+        this.roleRepository = roleRepository;
+        this.xtradeCustomerWebLink = xtradeCustomerWebLink;
+        this.notificationManager = notificationManager;
+    }
+
+
 
     @Override
     @Transactional(readOnly = true)
@@ -45,6 +65,8 @@ public class UserManagementServiceImpl implements UserManagmentService {
         Role userRole=null;
         UserAccount userAccount=null;
         RandomGenerator randomGenerator=null;
+        String emailVerificationLink=null;
+        MailNotification mailNotification=null;//creating mail notifiction object
         LocalDateTime time=null;
         String emailVerificationOtpCode=null;
         String mobileNoVerificationOtpCode=null;
@@ -81,7 +103,36 @@ public class UserManagementServiceImpl implements UserManagmentService {
 
         userAccountId=userAccountRepository.save(userAccount).getUserAccountId();
         log.info("userAccount with email: {} saved with userAccountId: {}",userAccount.getEmailAddress(),userAccountId);
-          return userAccountId;
+
+        try {
+            // generating link to be sent to user email address for verification
+            emailVerificationLink = xtradeCustomerWebLink + "/customer/" + userAccountId + "/"
+                    + emailVerificationOtpCode + "/verifyEmail";
+            log.info("email verification link: {} generated", emailVerificationLink);
+
+            mailNotification = new MailNotification();
+            mailNotification.setFrom("noreply@xtrade.com");
+            mailNotification.setTo(new String[]{userAccountDto.getEmailAddress()});
+            mailNotification.setSubject("verify your email address");
+            mailNotification.setTemplateName(TEMP_VERIFY_EMAIL);
+            log.info("getting templatename: {}",mailNotification.getTemplateName());
+
+            //setting tokens
+            Map<String, Object> tokens = new HashMap<>();
+            tokens.put("user", userAccountDto.getFirstName() + " " + userAccountDto.getLastName());
+            tokens.put("link", emailVerificationLink);
+
+            mailNotification.setTokens(tokens);
+            mailNotification.setAttachments(Collections.emptyList());
+            //sending mail
+            System.out.println("just about to send email");
+            notificationManager.email(mailNotification);
+            System.out.println("pass or fail");
+        }catch (Exception e){
+            log.error("error while sending the email to user: {} error: {}",userAccountDto.getEmailAddress(),e);
+        }
+
+        return userAccountId;
     }
 
 
