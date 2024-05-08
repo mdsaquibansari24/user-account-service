@@ -4,24 +4,25 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+
 @Entity
+@Table(name = "address")
 @Data
-@Table(name="address")
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="address_id")
+    @Column(name = "address_id")
     private int addressId;
-    @Column(name="address_line_1")
+    @Column(name = "address_line_1")
     private String addressLine1;
-    @Column(name="address_line_2")
+    @Column(name = "address_line_2")
     private String addressLine2;
     private String city;
     private String state;
     private int zip;
     private String country;
-    @Column(name="last_modified_dt")
+    @Column(name = "last_modified_dt")
     private LocalDateTime lastModifiedDate;
-    @Column(name="last_modified_by")
-    private String LastModifiedBy;
+    @Column(name = "last_modified_by")
+    private String lastModifiedBy;
 }

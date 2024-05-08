@@ -20,7 +20,7 @@ spring:
       mail.smtp.starttls.enable: true
       mail.smtp.auth: true
 
-logging:                     #transaction logging info will logged ,this is the property
+logging:
   level:
     root: info
   logback:

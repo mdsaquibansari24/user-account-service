@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `user_account_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `user_account_db`;
--- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.27, for Win64 (x86_64)
 --
--- Host: localhost    Database: user_account_db
+-- Host: localhost    Database: user_account
 -- ------------------------------------------------------
--- Server version	8.0.34
+-- Server version	8.0.27
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -143,27 +143,27 @@ DROP TABLE IF EXISTS `user_account`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_account` (
   `user_account_id` int NOT NULL AUTO_INCREMENT,
-  `email_address` varchar(100) NOT NULL,
+  `email_address` varchar(100) unique NOT NULL,
   `password` varchar(255) NOT NULL,
-  `first_nm` varchar(255) DEFAULT NULL,
-  `last_nm` varchar(255) DEFAULT NULL,
-  `dob` date DEFAULT NULL,
-  `gender` varchar(20) DEFAULT NULL,
-  `mobile_nbr` int DEFAULT NULL,
-  `email_verification_otp_code` varchar(20) DEFAULT NULL,
-  `mobile_nbr_verification_otp_code` varchar(20) DEFAULT NULL,
-  `email_verification_otp_code_generated_dt` datetime DEFAULT NULL,
-  `mobile_nbr_verification_otp_code_generated_dt` datetime DEFAULT NULL,
-  `email_verification_status` bit(1) DEFAULT NULL,
-  `mobile_nbr_verification_status` bit(1) DEFAULT NULL,
-  `registered_dt` date DEFAULT NULL,
-  `activated_dt` date NOT NULL,
-  `status` varchar(1) DEFAULT NULL,
-  `last_modified_dt` datetime DEFAULT NULL,
-  `last_modified_by` varchar(255) DEFAULT NULL,
-  `user_address_id` int NOT NULL,
+  `first_nm` varchar(255) NOT NULL,
+  `last_nm` varchar(255) NOT NULL,
+  `dob` date NOT NULL,
+  `gender` varchar(20) NOT NULL,
+  `mobile_nbr` varchar(13) unique NOT NULL,
+  `email_verification_otp_code` varchar(8) NOT NULL,
+  `mobile_nbr_verification_otp_code` varchar(8) NOT NULL,
+  `email_verification_otp_code_generated_dt` datetime NOT NULL,
+  `mobile_nbr_verification_otp_code_generated_dt` datetime NOT NULL,
+  `email_verification_status` TINYINT(1) DEFAULT 0,
+  `mobile_nbr_verification_status` TINYINT(1) DEFAULT 0,
+  `registered_dt` date NOT NULL,
+  `activated_dt` date DEFAULT NULL,
+  `status` varchar(1) NOT NULL,
+  `last_modified_dt` datetime NOT NULL,
+  `last_modified_by` varchar(255) NOT NULL,
+  `user_address_id` int DEFAULT NULL,
   `role_id` int NOT NULL,
-  `store_id` int NOT NULL,
+  `store_id` int DEFAULT NULL,
   PRIMARY KEY (`user_account_id`),
   KEY `user_address_id` (`user_address_id`),
   KEY `role_id` (`role_id`),
@@ -221,4 +221,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-04 13:34:28
+-- Dump completed on 2024-05-03 19:35:02
