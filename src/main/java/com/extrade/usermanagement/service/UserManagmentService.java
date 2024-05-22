@@ -1,7 +1,9 @@
 package com.extrade.usermanagement.service;
 
 
+import com.extrade.usermanagement.dto.AccountVerificationStatusDto;
 import com.extrade.usermanagement.dto.UserAccountDto;
+import com.extrade.usermanagement.utilities.VerificationTypeEnum;
 
 public interface UserManagmentService {
     long countUsersByEmailAddress(String emailAddress);
@@ -9,4 +11,9 @@ public interface UserManagmentService {
     long countUsersByMobileNo(String mobileNo);
 
     long registerCustomer(UserAccountDto userAccountDto);
+    AccountVerificationStatusDto verifyOtpAndUpdateAccountStatus(int userAccountId, String otpCode, VerificationTypeEnum verificationType);
+
+
+    AccountVerificationStatusDto accountVerificationStatusDto(int userAccountId);
+
 }

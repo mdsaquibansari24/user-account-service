@@ -1,7 +1,10 @@
 package com.extrade.usermanagement.api;
 
+import com.extrade.usermanagement.dto.AccountVerificationStatusDto;
+import com.extrade.usermanagement.dto.ErrorMessage;
 import com.extrade.usermanagement.dto.UserAccountDto;
 import com.extrade.usermanagement.service.UserManagmentService;
+import com.extrade.usermanagement.utilities.VerificationTypeEnum;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -55,6 +58,31 @@ public class UserAccountApiController {
         return ResponseEntity.ok(c);
     }
 
+    //updating database if needed
 
+    @PutMapping(value = "/{userAccountId}/{otpCode}/{verificationType}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ApiResponses(value = {@ApiResponse(responseCode = "404", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))},description = "UserAccount NotFound for Verification"),
+    @ApiResponse(responseCode = "208" , content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))},description = "UserAccount Already Activated"),
+    @ApiResponse(responseCode = "400" , content = {@Content(mediaType = "application/json" , schema = @Schema(implementation = ErrorMessage.class))},description = "VerificationCode Mis-Match"),
+    @ApiResponse(responseCode = "422" , content = {@Content(mediaType = "application/json" , schema = @Schema(implementation = ErrorMessage.class))},description = "otp Already verified"),
+    @ApiResponse(responseCode = "200" , content = {@Content(mediaType = "application/json" , schema = @Schema(implementation = ErrorMessage.class))})})
+    public AccountVerificationStatusDto verifyOtpCode(@PathVariable("userAccountId") int userAccountId,
+                                                          @PathVariable("otpCode") String otpCode,
+                                                          @PathVariable("verificationType") VerificationTypeEnum verificationType){
+         AccountVerificationStatusDto accountVerificationStatusDto=null;
+         accountVerificationStatusDto=userManagmentService.verifyOtpAndUpdateAccountStatus(userAccountId,otpCode,verificationType);
+         return accountVerificationStatusDto;
+    }
+
+
+    @GetMapping(value = "/{userAccountId}/verificationStatus",produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ApiResponses(value = {@ApiResponse(responseCode = "404", content = {@Content(mediaType = "application/json" , schema = @Schema(implementation = ErrorMessage.class))},description = "userAccount not found for verification status"),
+    @ApiResponse(responseCode = "200" , content = {@Content(mediaType = "application/json" , schema = @Schema(implementation = ErrorMessage.class))},description = "otp verified")})
+    public AccountVerificationStatusDto accountVerificationStatusDto(@PathVariable("userAccountId") int userAccountId){
+        AccountVerificationStatusDto accountVerificationStatusDto=null;
+
+        accountVerificationStatusDto= userManagmentService.accountVerificationStatusDto(userAccountId);
+        return accountVerificationStatusDto;
+    }
 
 }
