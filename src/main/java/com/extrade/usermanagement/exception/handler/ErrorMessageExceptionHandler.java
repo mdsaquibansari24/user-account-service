@@ -33,7 +33,7 @@ public class ErrorMessageExceptionHandler {
     }
     @ExceptionHandler(UserAlreadyActiveException.class)
     public ResponseEntity<ErrorMessage> handleUserAlreadyActiveException(HttpServletRequest request,UserAlreadyActiveException e){  // CARRIED THE EXCEPTION FROM SERVICE CLASS
-        return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(errorMessageFactory.failure(e,ErrorCode.USER_ALREADY_ACTIVATED)); // 2 VALUE YAHAN SE JAA RAHA HAI
+        return ResponseEntity.status(HttpStatus.GONE).body(errorMessageFactory.failure(e,ErrorCode.USER_ALREADY_ACTIVATED)); // 2 VALUE YAHAN SE JAA RAHA HAI
     }
 
     @ExceptionHandler({UserAccountNotFoundException.class})

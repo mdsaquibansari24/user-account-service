@@ -36,6 +36,7 @@ import java.util.Optional;
 public class UserManagementServiceImpl implements UserManagmentService {
     private final String TEMP_VERIFY_EMAIL="emai-verification.html";
     private final String TEMP_VERIFY_MOBILE="mobile-verification.html";
+    private final String TMP_CUSTOMER_WELCOME="customer-welcome.html";
 
 
 
@@ -167,6 +168,7 @@ public class UserManagementServiceImpl implements UserManagmentService {
         AccountVerificationStatusDto accountVerificationStatusDto=null;
         LocalDate now=LocalDate.now();
         UserAccount userAccount=null;
+        MailNotification mailNotification=null;
 
 
         Optional<UserAccount> optionalUserAccount =userAccountRepository.findById(userAccountId);
@@ -223,7 +225,22 @@ public class UserManagementServiceImpl implements UserManagmentService {
          }
          //here call will come only when some change happen
         int records = userAccountRepository.updateUserAccount(userAccountId,userAccount.getEmailVerificationStatus(),userAccount.getMobileNoVerificationStatus(),LocalDateTime.now(),userAccount.getActivatedDate(),userAccount.getStatus());
-        return accountVerificationStatusDto;
+
+         if(userAccount.getStatus().equals(UserAccountStatusEnum.ACTIVE.toString()) && records>0){
+             Map<String,Object> tokens=new HashMap<>();
+             tokens.put("user",userAccount.getFirstName()+" "+userAccount.getLastName());
+             tokens.put("eXtradeWebLink",xtradeCustomerWebLink);
+
+             mailNotification=new MailNotification();
+             mailNotification.setFrom("noreply@xtrade.com");
+             mailNotification.setTo(new String[]{userAccount.getEmailAddress()});
+             mailNotification.setSubject("Welcome to Xtrade Platform");
+             mailNotification.setTemplateName(TMP_CUSTOMER_WELCOME);
+
+
+         }
+
+         return accountVerificationStatusDto;
 
     }
 
